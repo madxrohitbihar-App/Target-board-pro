@@ -4,19 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Target Board</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
         body, html {
             width: 100%;
             height: 100%;
-            font-family: Arial, sans-serif;
-            background-color: #121212;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0f172a;
             overflow: hidden;
         }
+
+        /* App Container */
         .app-container {
             display: flex;
             flex-direction: column;
@@ -24,202 +30,158 @@
             height: 100vh;
             position: relative;
         }
-        /* Top Branding Header */
+
+        /* Top Custom Header */
         .top-header {
-            background: #1e293b;
-            color: white;
-            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: #0f172a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            flex-shrink: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease, height 0.3s ease;
+        }
+        .top-header.hidden-header {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+            height: 0;
+            border: none;
+            overflow: hidden;
+        }
+        .header-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 8px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 2px solid #334155;
-            min-height: 65px;
-            flex-shrink: 0;
-            z-index: 100;
         }
-        .brand-info {
+        .header-left {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
-        .brand-info img {
-            width: 42px;
-            height: 42px;
+        .cw-brand-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4px 14px 4px 6px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+        .cw-header-logo {
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #38bdf8;
+            object-fit: contain;
         }
-        .brand-text h1 {
-            font-size: 19px;
-            color: #f8fafc;
-            font-weight: 600;
+        .brand-text-group {
+            display: flex;
+            flex-direction: column;
         }
-        .developer-credit {
+        .cw-title-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .cw-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+        .cw-verified {
+            width: 14px;
+            height: 14px;
+            background: #38bdf8;
+            color: #0f172a;
+            border-radius: 50%;
+            font-size: 9px;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .developer-subtext {
             font-size: 10px;
             color: #94a3b8;
-            margin-top: 2px;
-            letter-spacing: 0.5px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
         }
+
         /* Iframe Container */
         .iframe-container {
             flex-grow: 1;
             width: 100%;
-            background: #121212;
+            background: #0f172a;
             position: relative;
             overflow: hidden;
         }
         iframe {
             width: 100%;
-            height: calc(100% + 65px);
-            margin-top: -65px;
+            /* Niche se thoda aur zyada crop karne ke liye margin adjust kiya hai */
+            height: calc(100% + 220px);
+            margin-top: -75px;
+            margin-bottom: -145px;
             border: none;
             display: block;
-        }
-
-        /* Popup Styles */
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            backdrop-filter: blur(6px);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .popup-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        .popup-box {
-            background: #1e293b;
-            width: 90%;
-            max-width: 380px;
-            padding: 30px 20px 25px 20px;
-            border-radius: 14px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
-            border: 2px solid #334155;
-            text-align: center;
-            color: #f8fafc;
-            position: relative;
-            transform: scale(0.8);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .popup-overlay.show .popup-box {
-            transform: scale(1);
-        }
-        .close-icon {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 30px;
-            height: 30px;
-            background: #334155;
-            color: #f8fafc;
-            border: none;
-            border-radius: 50%;
-            font-size: 16px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
-        }
-        .close-icon:hover {
-            background: #ef4444;
-            transform: scale(1.1);
-        }
-        .popup-box h2 {
-            font-size: 20px;
-            margin-bottom: 8px;
-            color: #38bdf8;
-        }
-        .popup-box p {
-            font-size: 14px;
-            color: #94a3b8;
-            margin-bottom: 20px;
-        }
-        .popup-btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 15px;
-            transition: 0.2s;
-        }
-        .whatsapp-btn {
-            background-color: #25D366;
-            color: white;
-        }
-        .whatsapp-btn:hover {
-            background-color: #20ba5a;
-        }
-        .telegram-btn {
-            background-color: #0088cc;
-            color: white;
-        }
-        .telegram-btn:hover {
-            background-color: #0077b5;
         }
     </style>
 </head>
 <body>
 
-    <!-- Popup Modal -->
-    <div class="popup-overlay" id="popupOverlay">
-        <div class="popup-box">
-            <button class="close-icon" onclick="closePopup()">✕</button>
-            <h2>Join Our Updates</h2>
-            <p>Important links ke liye hamare official channel ko join karein!</p>
-            
-            <a href="https://whatsapp.com/channel/0029Vb6FhReEquiLz1jNH00o" target="_blank" class="popup-btn whatsapp-btn">
-                Join WhatsApp Channel
-            </a>
-            
-            <a href="https://t.me/+cw7TRotEzcczNThl" target="_blank" class="popup-btn telegram-btn">
-                Join Telegram Group
-            </a>
-        </div>
-    </div>
-
     <div class="app-container">
         <!-- Top Custom Header -->
-        <header class="top-header">
-            <div class="brand-info">
-                <img src="https://i.postimg.cc/2yf3sPqb/IMG-20260731-232914-129.jpg" alt="Logo">
-                <div class="brand-text">
-                    <h1>Target Board</h1>
-                    <div class="developer-credit">Developer By MedxrohitBihar</div>
+        <header class="top-header" id="mainHeader">
+            <div class="header-container">
+                <div class="header-left">
+                    <div class="cw-brand-badge">
+                        <img class="cw-header-logo" src="https://i.postimg.cc/G3JBcFR1/image-search-1791599115054.png" alt="Logo">
+                        <div class="brand-text-group">
+                            <div class="cw-title-row">
+                                <span class="cw-title">Target Board</span>
+                                <span class="cw-verified">✓</span>
+                            </div>
+                            <span class="developer-subtext">Developer By MedxrohitBihar</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
 
-        <!-- Main Proxy Website Area -->
+        <!-- Main Website Area -->
         <div class="iframe-container">
-            <iframe src="https://tb.studybeepro.site/" allowfullscreen></iframe>
+            <iframe id="appFrame" src="https://studyapkmod-targetboard.vercel.app/index.html" allowfullscreen></iframe>
         </div>
     </div>
 
     <script>
+        // Auto hide/show header based on inner iframe URL or video/player state
         window.addEventListener('load', function() {
-            setTimeout(function() {
-                document.getElementById('popupOverlay').classList.add('show');
-            }, 3000);
-        });
+            const iframe = document.getElementById('appFrame');
+            const header = document.getElementById('mainHeader');
 
-        function closePopup() {
-            document.getElementById('popupOverlay').classList.remove('show');
-        }
+            try {
+                iframe.addEventListener('load', function() {
+                    const iframeWin = iframe.contentWindow;
+                    
+                    setInterval(function() {
+                        try {
+                            const currentUrl = iframeWin.location.href.toLowerCase();
+                            if (currentUrl.includes('play') || currentUrl.includes('video') || currentUrl.includes('watch') || currentUrl.includes('class') || currentUrl.includes('player')) {
+                                header.classList.add('hidden-header');
+                            } else {
+                                header.classList.remove('hidden-header');
+                            }
+                        } catch (e) {}
+                    }, 500);
+                });
+            } catch (e) {}
+        });
     </script>
 
 </body>
